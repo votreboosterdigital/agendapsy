@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
   const supabase = createServerClient(
@@ -27,12 +27,11 @@ export async function middleware(request: NextRequest) {
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
     request.nextUrl.pathname.startsWith('/signup')
-  const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard') ||
+  const isDashboardRoute =
     request.nextUrl.pathname.startsWith('/agenda') ||
     request.nextUrl.pathname.startsWith('/pacientes') ||
     request.nextUrl.pathname.startsWith('/notas') ||
     request.nextUrl.pathname.startsWith('/configuracion')
-  const isOnboarding = request.nextUrl.pathname.startsWith('/onboarding')
 
   if (!user && isDashboardRoute) {
     return NextResponse.redirect(new URL('/login', request.url))

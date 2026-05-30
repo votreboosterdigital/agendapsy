@@ -89,7 +89,7 @@ export default async function PacientesPage({
             </tr>
           </thead>
           <tbody style={{ backgroundColor: '#0F0F11' }}>
-            {(patients ?? []).map((patient: Patient) => (
+            {((patients ?? []) as Patient[]).map((patient) => (
               <tr key={patient.id} className="border-t" style={{ borderColor: '#ffffff08' }}>
                 <td className="px-4 py-3 text-white font-medium">{patient.full_name}</td>
                 <td className="px-4 py-3 text-zinc-400">{patient.email}</td>
