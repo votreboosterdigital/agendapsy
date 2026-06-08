@@ -1,8 +1,17 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@/lib/supabase/server'
+import { checkRateLimit } from '@/lib/rate-limit'
 
-export async function POST() {
+export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? 'anonymous'
+  const { allowed } = await checkRateLimit(`stripe-checkout:${ip}`)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas solicitudes. Intenta más tarde.' },
+      { status: 429 }
+    )
+  }
   const supabase = await createClient()
   const {
     data: { user },

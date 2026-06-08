@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "appointments": "Rendez-vous",
+    "patients": "Patients",
+    "settings": "Paramètres",
+    "logout": "Déconnexion"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "register": "S'inscrire",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe"
+  },
+  "appointments": {
+    "new": "Nouveau rendez-vous",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "date": "Date",
+    "time": "Heure",
+    "patient": "Patient"
+  },
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "error": "Erreur",
+    "success": "Succès !"
+  }
+}

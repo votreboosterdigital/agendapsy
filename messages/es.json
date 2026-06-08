@@ -1,0 +1,32 @@
+{
+  "nav": {
+    "dashboard": "Panel",
+    "appointments": "Citas",
+    "patients": "Pacientes",
+    "settings": "Configuración",
+    "logout": "Cerrar sesión"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "email": "Correo electrónico",
+    "password": "Contraseña"
+  },
+  "appointments": {
+    "new": "Nueva cita",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "date": "Fecha",
+    "time": "Hora",
+    "patient": "Paciente"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "error": "Error",
+    "success": "¡Éxito!"
+  }
+}

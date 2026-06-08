@@ -4,6 +4,7 @@ import {
   sendAppointmentConfirmation,
   sendNewBookingNotification,
 } from '@/lib/resend/emails'
+import { checkRateLimit } from '@/lib/rate-limit'
 import { z } from 'zod'
 
 const BodySchema = z.object({
@@ -16,6 +17,15 @@ const BodySchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for') ?? 'anonymous'
+  const { allowed } = await checkRateLimit(`booking:${ip}`)
+  if (!allowed) {
+    return NextResponse.json(
+      { error: 'Demasiadas solicitudes. Intenta más tarde.' },
+      { status: 429 }
+    )
+  }
+
   let body: unknown
   try {
     body = await request.json()
