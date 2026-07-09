@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { startOfWeek, endOfWeek } from 'date-fns'
+import { startOfWeek, endOfWeek, addDays, format, parseISO, isValid } from 'date-fns'
 import { WeekCalendar } from './components/WeekCalendar'
 import { NewAppointmentDialog } from './components/NewAppointmentDialog'
 import type { Database } from '@/lib/supabase/types'
@@ -11,14 +11,29 @@ type Service = Pick<
   'id' | 'name' | 'duration_min' | 'price_usd'
 >
 
-export default async function AgendaPage() {
+export default async function AgendaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ week?: string }>
+}) {
+  const { week } = await searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const now = new Date()
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 })
-  const weekEnd = endOfWeek(now, { weekStartsOn: 1 })
+  let weekStart: Date
+  if (week) {
+    const parsed = parseISO(week)
+    weekStart = isValid(parsed)
+      ? startOfWeek(parsed, { weekStartsOn: 1 })
+      : startOfWeek(new Date(), { weekStartsOn: 1 })
+  } else {
+    weekStart = startOfWeek(new Date(), { weekStartsOn: 1 })
+  }
+  const weekEnd = endOfWeek(weekStart, { weekStartsOn: 1 })
+
+  const prevWeek = format(addDays(weekStart, -7), 'yyyy-MM-dd')
+  const nextWeek = format(addDays(weekStart, 7), 'yyyy-MM-dd')
 
   const [{ data: appointments }, { data: services }] = await Promise.all([
     supabase
@@ -41,11 +56,13 @@ export default async function AgendaPage() {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-white">Agenda</h1>
-        <NewAppointmentDialog services={(services ?? []) as Service[]} />
+        <NewAppointmentDialog services={(services ?? []) as Service[]} defaultDate={format(new Date(), 'yyyy-MM-dd')} />
       </div>
       <WeekCalendar
         appointments={(appointments ?? []) as Appointment[]}
         weekStart={weekStart}
+        prevWeek={prevWeek}
+        nextWeek={nextWeek}
       />
     </div>
   )

@@ -79,7 +79,7 @@ export function BillingSection({
           className="px-4 py-2 rounded-md text-sm font-medium text-white disabled:opacity-50 hover:opacity-80 transition-opacity"
           style={{ backgroundColor: '#635BFF' }}
         >
-          {loading ? 'Cargando...' : 'Suscribirme — $29/mes'}
+          {loading ? 'Cargando...' : 'Suscribirme — $29 CAD/mes'}
         </button>
       )}
     </div>

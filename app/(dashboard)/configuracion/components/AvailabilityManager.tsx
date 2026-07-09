@@ -96,12 +96,15 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
             <input {...register('start_time')} type="time" className={inputCls} style={{ colorScheme: 'dark' }} />
             <input {...register('end_time')} type="time" className={inputCls} style={{ colorScheme: 'dark' }} />
             <div className="col-span-2">
-              <input
+              <select
                 {...register('session_duration_min')}
-                type="number"
-                placeholder="Duración sesión (min)"
                 className={inputCls}
-              />
+                style={{ backgroundColor: '#1a1a1d' }}
+              >
+                {[30, 60, 90, 120].map((d) => (
+                  <option key={d} value={d}>{d} minutos</option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="flex gap-2">

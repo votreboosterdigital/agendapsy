@@ -14,12 +14,19 @@ type Service = Pick<
   'id' | 'name' | 'duration_min' | 'price_usd'
 >
 
+const TIME_OPTIONS: string[] = []
+for (let h = 7; h <= 20; h++) {
+  TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:00`)
+  if (h < 20) TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:30`)
+}
+
 const schema = z.object({
   patient_name: z.string().min(2, 'Mínimo 2 caracteres'),
   patient_email: z.string().email('Email inválido'),
   patient_whatsapp: z.string().optional(),
   service_id: z.string().uuid('Selecciona un servicio'),
-  starts_at: z.string().min(1, 'Selecciona fecha y hora'),
+  date: z.string().min(1, 'Selecciona una fecha'),
+  time: z.string().min(1, 'Selecciona una hora'),
 })
 
 type FormData = z.infer<typeof schema>
@@ -45,23 +52,36 @@ function Field({
   )
 }
 
-export function NewAppointmentDialog({ services }: { services: Service[] }) {
+export function NewAppointmentDialog({
+  services,
+  defaultDate,
+}: {
+  services: Service[]
+  defaultDate: string
+}) {
   const [open, setOpen] = useState(false)
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues: { date: defaultDate, time: '09:00' },
+  })
 
   async function onSubmit(data: FormData) {
+    const starts_at = new Date(`${data.date}T${data.time}:00`).toISOString()
     const result = await createAppointment({
-      ...data,
-      starts_at: new Date(data.starts_at).toISOString(),
+      patient_name: data.patient_name,
+      patient_email: data.patient_email,
+      patient_whatsapp: data.patient_whatsapp,
+      service_id: data.service_id,
+      starts_at,
     })
     if (result.success) {
       toast.success('Cita creada')
-      reset()
+      reset({ date: defaultDate, time: '09:00' })
       setOpen(false)
     } else {
       toast.error(result.error ?? 'Error al crear cita')
@@ -98,6 +118,7 @@ export function NewAppointmentDialog({ services }: { services: Service[] }) {
               {...register('patient_name')}
               placeholder="María González"
               className={inputCls}
+              autoFocus
             />
           </Field>
           <Field label="Email" error={errors.patient_email?.message}>
@@ -124,19 +145,32 @@ export function NewAppointmentDialog({ services }: { services: Service[] }) {
               <option value="">Selecciona un servicio</option>
               {services.map((s) => (
                 <option key={s.id} value={s.id}>
-                  {s.name} — {s.duration_min}min — ${s.price_usd}
+                  {s.name} — {s.duration_min}min — ${s.price_usd} MXN
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Fecha y hora" error={errors.starts_at?.message}>
-            <input
-              {...register('starts_at')}
-              type="datetime-local"
-              className={inputCls}
-              style={{ colorScheme: 'dark' }}
-            />
-          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Fecha" error={errors.date?.message}>
+              <input
+                {...register('date')}
+                type="date"
+                className={inputCls}
+                style={{ colorScheme: 'dark' }}
+              />
+            </Field>
+            <Field label="Hora" error={errors.time?.message}>
+              <select
+                {...register('time')}
+                className={inputCls}
+                style={{ backgroundColor: '#1a1a1d' }}
+              >
+                {TIME_OPTIONS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </Field>
+          </div>
           <div className="flex gap-3 pt-2">
             <button
               type="button"

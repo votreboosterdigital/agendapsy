@@ -63,7 +63,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
             <div>
               <p className="text-sm text-white">{s.name}</p>
               <p className="text-xs text-zinc-500">
-                {s.duration_min} min · ${s.price_usd} USD
+                {s.duration_min} min · ${s.price_usd} MXN
               </p>
             </div>
             <button
@@ -104,7 +104,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
                   {...register('price_usd')}
                   type="number"
                   step="0.01"
-                  placeholder="Precio USD"
+                  placeholder="Precio MXN"
                   className={inputCls}
                 />
                 {errors.price_usd && (

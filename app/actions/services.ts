@@ -26,7 +26,10 @@ export async function createService(
     is_active: true,
   })
 
-  if (error) return { success: false, error: 'Error al crear servicio' }
+  if (error) {
+    console.error('[createService]', error)
+    return { success: false, error: `Error al crear servicio: ${error.message}` }
+  }
 
   revalidatePath('/configuracion')
   return { success: true }

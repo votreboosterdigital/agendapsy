@@ -120,10 +120,6 @@ ALTER TABLE public.appointments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "therapist_own_appointments" ON public.appointments
   FOR ALL USING (auth.uid() = therapist_id);
 
--- SERVICE ROLE peut créer des appointments (booking public)
-CREATE POLICY "service_role_all_appointments" ON public.appointments
-  FOR ALL USING (auth.role() = 'service_role');
-
 -- SESSION_NOTES
 CREATE TABLE IF NOT EXISTS public.session_notes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

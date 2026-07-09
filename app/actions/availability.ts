@@ -26,7 +26,10 @@ export async function saveAvailabilityRule(
     ...parsed.data,
   })
 
-  if (error) return { success: false, error: 'Error al guardar disponibilidad' }
+  if (error) {
+    console.error('[saveAvailabilityRule]', error)
+    return { success: false, error: `Error: ${error.message}` }
+  }
 
   revalidatePath('/configuracion')
   return { success: true }

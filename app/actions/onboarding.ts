@@ -43,13 +43,15 @@ export async function updateProfile(data: ProfileData): Promise<ActionResult> {
 
   const { error } = await supabase
     .from('profiles')
-    .update({
+    .upsert({
+      id: user.id,
+      email: user.email ?? '',
       full_name: data.full_name,
       specialty: data.specialty,
       bio: data.bio,
       phone: data.phone,
+      subscription_status: 'trialing',
     } as never)
-    .eq('id', user.id)
 
   if (error) {
     console.error('[updateProfile]', error)

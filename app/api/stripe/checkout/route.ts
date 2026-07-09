@@ -18,14 +18,21 @@ export async function POST(request: NextRequest) {
   } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'No autenticado' }, { status: 401 })
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from('profiles')
     .select('email, full_name, stripe_customer_id')
     .eq('id', user.id)
     .single()
 
   if (!profile) {
-    return NextResponse.json({ error: 'Perfil no encontrado' }, { status: 404 })
+    const fallbackEmail = user.email ?? ''
+    await supabase.from('profiles').upsert({
+      id: user.id,
+      email: fallbackEmail,
+      full_name: (user.user_metadata?.full_name as string | undefined) ?? fallbackEmail,
+      subscription_status: 'trialing',
+    })
+    profile = { email: fallbackEmail, full_name: fallbackEmail, stripe_customer_id: null }
   }
 
   let customerId = profile.stripe_customer_id

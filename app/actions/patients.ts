@@ -28,7 +28,10 @@ export async function createPatient(
     status: 'active',
   })
 
-  if (error) return { success: false, error: 'Error al crear paciente' }
+  if (error) {
+    console.error('[createPatient]', error)
+    return { success: false, error: `Error al crear paciente: ${error.message}` }
+  }
 
   revalidatePath('/pacientes')
   return { success: true }
