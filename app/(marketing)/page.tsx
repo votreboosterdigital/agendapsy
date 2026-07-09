@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 import { motion, useReducedMotion, type Variants } from "framer-motion"
 import {
   Calendar,
@@ -241,12 +240,12 @@ export default function LandingPage() {
             >
               Empieza gratis 14 días →
             </MovingBorderButton>
-            <Link
+            <a
               href="#como-funciona"
               className="text-sm text-[#a1a1aa] underline-offset-4 transition-colors hover:text-white hover:underline"
             >
               Ver cómo funciona
-            </Link>
+            </a>
           </motion.div>
         </div>
       </section>
@@ -495,18 +494,18 @@ export default function LandingPage() {
             className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
             {...motionProps(2)}
           >
-            <Link
+            <a
               href="/signup"
               className="inline-flex h-12 items-center justify-center rounded-[6px] bg-white px-7 text-sm font-medium text-[#635BFF] transition-colors hover:bg-white/90"
             >
               Empieza gratis →
-            </Link>
-            <Link
+            </a>
+            <a
               href="#como-funciona"
               className="inline-flex h-12 items-center justify-center rounded-[6px] border border-white/30 px-7 text-sm font-medium text-white transition-colors hover:bg-white/10"
             >
               Ver demo
-            </Link>
+            </a>
           </motion.div>
         </div>
       </section>
@@ -524,24 +523,24 @@ export default function LandingPage() {
             </div>
 
             <nav className="flex items-center gap-6">
-              <Link
+              <a
                 href="/terms"
                 className="text-xs text-[#71717a] transition-colors hover:text-white"
               >
                 Términos
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/privacy"
                 className="text-xs text-[#71717a] transition-colors hover:text-white"
               >
                 Privacidad
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/contact"
                 className="text-xs text-[#71717a] transition-colors hover:text-white"
               >
                 Contacto
-              </Link>
+              </a>
             </nav>
 
             <p className="text-xs text-[#71717a]">© 2026 AgendaPsy</p>
