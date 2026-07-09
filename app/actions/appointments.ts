@@ -99,3 +99,24 @@ export async function deleteAppointment(
 ): Promise<{ success: boolean; error?: string }> {
   return updateAppointmentStatus(id, 'cancelled')
 }
+
+export async function updateAppointmentTime(
+  id: string,
+  starts_at: string,
+  ends_at: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'No autenticado' }
+
+  const { error } = await supabase
+    .from('appointments')
+    .update({ starts_at, ends_at })
+    .eq('id', id)
+    .eq('therapist_id', user.id)
+
+  if (error) return { success: false, error: 'Error al actualizar horario' }
+
+  revalidatePath('/agenda')
+  return { success: true }
+}
