@@ -127,7 +127,7 @@ const faqItems = [
   {
     question: "¿Funciona para psicólogos en México?",
     answer:
-      "Sí, aceptamos pagos en USD vía Stripe, compatible con cuentas bancarias mexicanas.",
+      "Sí, aceptamos pagos en CAD vía Stripe, compatible con cuentas bancarias mexicanas.",
   },
 ]
 
@@ -406,7 +406,7 @@ export default function LandingPage() {
                   <p className="mb-1 text-5xl font-bold text-white">
                     $29{" "}
                     <span className="text-xl font-normal text-[#71717a]">
-                      USD /mes
+                      CAD /mes
                     </span>
                   </p>
                   <p className="text-sm text-[#a1a1aa]">
