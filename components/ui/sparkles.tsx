@@ -48,7 +48,7 @@ export function SparklesCore({
 
   if (prefersReducedMotion) {
     return (
-      <div className={cn("absolute inset-0 overflow-hidden", className)}>
+      <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
         {particles.map((p) => (
           <div
             key={p.id}
@@ -68,7 +68,7 @@ export function SparklesCore({
   }
 
   return (
-    <div className={cn("absolute inset-0 overflow-hidden", className)}>
+    <div className={cn("pointer-events-none absolute inset-0 overflow-hidden", className)}>
       {particles.map((p) => (
         <motion.div
           key={p.id}
