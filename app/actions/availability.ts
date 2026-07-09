@@ -35,6 +35,30 @@ export async function saveAvailabilityRule(
   return { success: true }
 }
 
+export async function saveAvailabilityRules(
+  rules: Array<z.infer<typeof AvailabilitySchema>>
+): Promise<{ success: boolean; error?: string }> {
+  if (rules.length === 0) return { success: false, error: 'Sin reglas' }
+  const validated = rules.map((r) => AvailabilitySchema.safeParse(r))
+  if (validated.some((v) => !v.success)) return { success: false, error: 'Datos inválidos' }
+
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'No autenticado' }
+
+  const { error } = await supabase.from('availability_rules').insert(
+    validated.map((v) => ({ therapist_id: user.id, ...(v as { success: true; data: z.infer<typeof AvailabilitySchema> }).data }))
+  )
+
+  if (error) {
+    console.error('[saveAvailabilityRules]', error)
+    return { success: false, error: `Error: ${error.message}` }
+  }
+
+  revalidatePath('/configuracion')
+  return { success: true }
+}
+
 export async function deleteAvailabilityRule(
   id: string
 ): Promise<{ success: boolean; error?: string }> {

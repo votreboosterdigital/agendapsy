@@ -1,49 +1,64 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 import { toast } from 'sonner'
 import { Plus, Trash2 } from 'lucide-react'
-import { saveAvailabilityRule, deleteAvailabilityRule } from '@/app/actions/availability'
+import { saveAvailabilityRules, deleteAvailabilityRule } from '@/app/actions/availability'
 import type { Database } from '@/lib/supabase/types'
-import type { Resolver } from 'react-hook-form'
 
 type AvailabilityRule = Database['public']['Tables']['availability_rules']['Row']
 
 const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+const DAY_SHORT = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom']
 
-const schema = z.object({
-  day_of_week: z.coerce.number().int().min(0).max(6),
-  start_time: z.string().regex(/^\d{2}:\d{2}$/, 'Formato HH:MM'),
-  end_time: z.string().regex(/^\d{2}:\d{2}$/, 'Formato HH:MM'),
-  session_duration_min: z.coerce.number().int().min(15, 'Mínimo 15 min'),
-})
-
-type FormData = z.infer<typeof schema>
+const TIME_OPTIONS: string[] = []
+for (let h = 7; h <= 20; h++) {
+  TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:00`)
+  if (h < 20) TIME_OPTIONS.push(`${String(h).padStart(2, '0')}:30`)
+}
 
 const inputCls =
   'w-full px-3 py-2 rounded-md text-sm text-white bg-white/5 border border-[#ffffff12] outline-none focus:ring-1 focus:ring-[#635BFF]'
 
 export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
   const [showForm, setShowForm] = useState(false)
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { isSubmitting },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema) as Resolver<FormData>,
-    defaultValues: { session_duration_min: 50 },
-  })
+  const [selectedDays, setSelectedDays] = useState<number[]>([])
+  const [startTime, setStartTime] = useState('09:00')
+  const [endTime, setEndTime] = useState('18:00')
+  const [duration, setDuration] = useState(60)
+  const [saving, setSaving] = useState(false)
 
-  async function onSubmit(data: FormData) {
-    const result = await saveAvailabilityRule(data)
+  function toggleDay(i: number) {
+    setSelectedDays((prev) => (prev.includes(i) ? prev.filter((d) => d !== i) : [...prev, i]))
+  }
+
+  function resetForm() {
+    setSelectedDays([])
+    setStartTime('09:00')
+    setEndTime('18:00')
+    setDuration(60)
+    setShowForm(false)
+  }
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (selectedDays.length === 0) {
+      toast.error('Selecciona al menos un día')
+      return
+    }
+    setSaving(true)
+    const result = await saveAvailabilityRules(
+      selectedDays.map((day) => ({
+        day_of_week: day,
+        start_time: startTime,
+        end_time: endTime,
+        session_duration_min: duration,
+      }))
+    )
+    setSaving(false)
     if (result.success) {
-      toast.success('Disponibilidad guardada')
-      reset()
-      setShowForm(false)
+      toast.success(`Disponibilidad guardada (${selectedDays.length} día${selectedDays.length > 1 ? 's' : ''})`)
+      resetForm()
     } else {
       toast.error(result.error ?? 'Error')
     }
@@ -77,40 +92,84 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
           </button>
         </div>
       ))}
+
       {showForm ? (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 pt-2">
+        <form
+          onSubmit={onSubmit}
+          className="space-y-3 pt-3 p-3 rounded-lg"
+          style={{ backgroundColor: '#161618', border: '1px solid #ffffff12' }}
+        >
+          {/* Selector de días */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-2">Días</p>
+            <div className="flex flex-wrap gap-1.5">
+              {DAY_SHORT.map((d, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => toggleDay(i)}
+                  className="px-2.5 py-1 rounded-md text-xs font-medium transition-all"
+                  style={{
+                    backgroundColor: selectedDays.includes(i) ? '#635BFF' : '#ffffff08',
+                    color: selectedDays.includes(i) ? '#fff' : '#a1a1aa',
+                    border: `1px solid ${selectedDays.includes(i) ? '#635BFF' : '#ffffff12'}`,
+                  }}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Horario */}
           <div className="grid grid-cols-2 gap-2">
-            <div className="col-span-2">
+            <div>
+              <p className="text-xs text-zinc-500 mb-1">Inicio</p>
               <select
-                {...register('day_of_week')}
+                value={startTime}
+                onChange={(e) => setStartTime(e.target.value)}
                 className={inputCls}
                 style={{ backgroundColor: '#1a1a1d' }}
               >
-                {DAYS.map((d, i) => (
-                  <option key={i} value={i}>
-                    {d}
-                  </option>
+                {TIME_OPTIONS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
                 ))}
               </select>
             </div>
-            <input {...register('start_time')} type="time" className={inputCls} style={{ colorScheme: 'dark' }} />
-            <input {...register('end_time')} type="time" className={inputCls} style={{ colorScheme: 'dark' }} />
-            <div className="col-span-2">
+            <div>
+              <p className="text-xs text-zinc-500 mb-1">Fin</p>
               <select
-                {...register('session_duration_min')}
+                value={endTime}
+                onChange={(e) => setEndTime(e.target.value)}
                 className={inputCls}
                 style={{ backgroundColor: '#1a1a1d' }}
               >
-                {[30, 60, 90, 120].map((d) => (
-                  <option key={d} value={d}>{d} minutos</option>
+                {TIME_OPTIONS.map((t) => (
+                  <option key={t} value={t}>{t}</option>
                 ))}
               </select>
             </div>
           </div>
-          <div className="flex gap-2">
+
+          {/* Duración */}
+          <div>
+            <p className="text-xs text-zinc-500 mb-1">Duración de sesión</p>
+            <select
+              value={duration}
+              onChange={(e) => setDuration(Number(e.target.value))}
+              className={inputCls}
+              style={{ backgroundColor: '#1a1a1d' }}
+            >
+              {[30, 60, 90, 120].map((d) => (
+                <option key={d} value={d}>{d} minutos</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex gap-2 pt-1">
             <button
               type="button"
-              onClick={() => setShowForm(false)}
+              onClick={resetForm}
               className="px-3 py-1.5 text-xs text-zinc-400 hover:text-white border rounded-md transition-colors"
               style={{ borderColor: '#ffffff12' }}
             >
@@ -118,11 +177,15 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
             </button>
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="px-3 py-1.5 text-xs text-white rounded-md disabled:opacity-50"
+              disabled={saving || selectedDays.length === 0}
+              className="px-3 py-1.5 text-xs text-white rounded-md disabled:opacity-50 transition-opacity"
               style={{ backgroundColor: '#635BFF' }}
             >
-              {isSubmitting ? 'Guardando...' : 'Guardar'}
+              {saving
+                ? 'Guardando...'
+                : selectedDays.length > 0
+                ? `Guardar ${selectedDays.length} día${selectedDays.length > 1 ? 's' : ''}`
+                : 'Selecciona días'}
             </button>
           </div>
         </form>

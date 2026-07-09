@@ -51,14 +51,21 @@ export async function POST(request: NextRequest) {
       .eq('id', user.id)
   }
 
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: 'subscription',
-    payment_method_types: ['card'],
-    line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/configuracion?success=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/configuracion`,
-  })
+  let session
+  try {
+    session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      payment_method_types: ['card'],
+      line_items: [{ price: process.env.STRIPE_PRICE_ID!, quantity: 1 }],
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/configuracion?success=1`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/configuracion`,
+    })
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Error Stripe'
+    console.error('[stripe/checkout]', msg)
+    return NextResponse.json({ error: msg }, { status: 500 })
+  }
 
   return NextResponse.json({ url: session.url })
 }
