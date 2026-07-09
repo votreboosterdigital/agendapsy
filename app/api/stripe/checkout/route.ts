@@ -26,10 +26,12 @@ export async function POST(request: NextRequest) {
 
   if (!profile) {
     const fallbackEmail = user.email ?? ''
+    const baseSlug = fallbackEmail.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase()
     await supabase.from('profiles').upsert({
       id: user.id,
       email: fallbackEmail,
       full_name: (user.user_metadata?.full_name as string | undefined) ?? fallbackEmail,
+      slug: `${baseSlug}-${user.id.slice(0, 6)}`,
       subscription_status: 'trialing',
     })
     profile = { email: fallbackEmail, full_name: fallbackEmail, stripe_customer_id: null }
