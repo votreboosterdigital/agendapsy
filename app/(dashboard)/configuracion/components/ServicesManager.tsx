@@ -21,7 +21,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const inputCls =
-  'w-full px-3 py-2 rounded-md text-sm text-white bg-white/5 border border-[#ffffff12] outline-none focus:ring-1 focus:ring-[#635BFF]'
+  'w-full px-3 py-2 rounded-md text-sm text-foreground bg-muted border border-border outline-none focus:ring-1 focus:ring-[#635BFF]'
 
 export function ServicesManager({ services }: { services: Service[] }) {
   const [showForm, setShowForm] = useState(false)
@@ -57,18 +57,17 @@ export function ServicesManager({ services }: { services: Service[] }) {
         .map((s) => (
           <div
             key={s.id}
-            className="flex items-center justify-between px-3 py-2.5 rounded-lg"
-            style={{ backgroundColor: '#161618', border: '1px solid #ffffff08' }}
+            className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-card border border-border/50"
           >
             <div>
-              <p className="text-sm text-white">{s.name}</p>
-              <p className="text-xs text-zinc-500">
+              <p className="text-sm text-foreground">{s.name}</p>
+              <p className="text-xs text-muted-foreground">
                 {s.duration_min} min · ${s.price_usd} MXN
               </p>
             </div>
             <button
               onClick={() => handleDelete(s.id, s.name)}
-              className="p-1.5 rounded text-zinc-600 hover:text-red-400 transition-colors"
+              className="p-1.5 rounded text-muted-foreground hover:text-red-400 transition-colors"
             >
               <Trash2 size={14} />
             </button>
@@ -117,8 +116,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
             <button
               type="button"
               onClick={() => setShowForm(false)}
-              className="px-3 py-1.5 text-xs text-zinc-400 hover:text-white border rounded-md transition-colors"
-              style={{ borderColor: '#ffffff12' }}
+              className="px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground border border-border rounded-md transition-colors"
             >
               Cancelar
             </button>
@@ -135,8 +133,7 @@ export function ServicesManager({ services }: { services: Service[] }) {
       ) : (
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-zinc-400 hover:text-white border transition-colors"
-          style={{ borderColor: '#ffffff12' }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground border border-border transition-colors"
         >
           <Plus size={13} />
           Añadir servicio

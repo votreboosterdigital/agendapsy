@@ -18,7 +18,7 @@ for (let h = 7; h <= 20; h++) {
 }
 
 const inputCls =
-  'w-full px-3 py-2 rounded-md text-sm text-white bg-white/5 border border-[#ffffff12] outline-none focus:ring-1 focus:ring-[#635BFF]'
+  'w-full px-3 py-2 rounded-md text-sm text-foreground bg-muted border border-border outline-none focus:ring-1 focus:ring-[#635BFF]'
 
 export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
   const [showForm, setShowForm] = useState(false)
@@ -75,11 +75,10 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
       {rules.map((r) => (
         <div
           key={r.id}
-          className="flex items-center justify-between px-3 py-2.5 rounded-lg"
-          style={{ backgroundColor: '#161618', border: '1px solid #ffffff08' }}
+          className="flex items-center justify-between px-3 py-2.5 rounded-lg bg-card border border-border/50"
         >
           <div>
-            <p className="text-sm text-white">{DAYS[r.day_of_week]}</p>
+            <p className="text-sm text-foreground">{DAYS[r.day_of_week]}</p>
             <p className="text-xs text-zinc-500">
               {r.start_time} – {r.end_time} · {r.session_duration_min} min
             </p>
@@ -96,8 +95,7 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
       {showForm ? (
         <form
           onSubmit={onSubmit}
-          className="space-y-3 pt-3 p-3 rounded-lg"
-          style={{ backgroundColor: '#161618', border: '1px solid #ffffff12' }}
+          className="space-y-3 pt-3 p-3 rounded-lg bg-card border border-border"
         >
           {/* Selector de días */}
           <div>
@@ -108,12 +106,12 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
                   key={i}
                   type="button"
                   onClick={() => toggleDay(i)}
-                  className="px-2.5 py-1 rounded-md text-xs font-medium transition-all"
-                  style={{
-                    backgroundColor: selectedDays.includes(i) ? '#635BFF' : '#ffffff08',
-                    color: selectedDays.includes(i) ? '#fff' : '#a1a1aa',
-                    border: `1px solid ${selectedDays.includes(i) ? '#635BFF' : '#ffffff12'}`,
-                  }}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all border ${
+                    selectedDays.includes(i)
+                      ? 'border-[#635BFF] text-white'
+                      : 'border-border text-muted-foreground hover:text-foreground'
+                  }`}
+                  style={{ backgroundColor: selectedDays.includes(i) ? '#635BFF' : undefined }}
                 >
                   {d}
                 </button>
@@ -129,7 +127,6 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
                 className={inputCls}
-                style={{ backgroundColor: '#1a1a1d' }}
               >
                 {TIME_OPTIONS.map((t) => (
                   <option key={t} value={t}>{t}</option>
@@ -142,7 +139,6 @@ export function AvailabilityManager({ rules }: { rules: AvailabilityRule[] }) {
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
                 className={inputCls}
-                style={{ backgroundColor: '#1a1a1d' }}
               >
                 {TIME_OPTIONS.map((t) => (
                   <option key={t} value={t}>{t}</option>

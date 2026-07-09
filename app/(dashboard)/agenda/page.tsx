@@ -55,7 +55,7 @@ export default async function AgendaPage({
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-white">Agenda</h1>
+        <h1 className="text-xl font-semibold text-foreground">Agenda</h1>
         <NewAppointmentDialog services={(services ?? []) as Service[]} defaultDate={format(new Date(), 'yyyy-MM-dd')} />
       </div>
       <WeekCalendar

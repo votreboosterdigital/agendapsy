@@ -56,7 +56,7 @@ export default async function PacientesPage({
   return (
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-white">Pacientes</h1>
+        <h1 className="text-xl font-semibold text-foreground">Pacientes</h1>
         <NewPatientDialog />
       </div>
       <div className="flex gap-2 mb-5">
@@ -64,36 +64,36 @@ export default async function PacientesPage({
           <a
             key={s ?? 'all'}
             href={s ? `/pacientes?status=${s}` : '/pacientes'}
-            className="px-3 py-1 rounded-full text-xs font-medium transition-colors"
-            style={{
-              backgroundColor: status === s ? '#635BFF' : '#ffffff08',
-              color: status === s ? 'white' : '#a1a1aa',
-            }}
+            className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+              status === s
+                ? 'bg-[#635BFF] text-white'
+                : 'bg-muted text-muted-foreground hover:text-foreground'
+            }`}
           >
             {s ? STATUS_LABELS[s] : 'Todos'}
           </a>
         ))}
       </div>
-      <div className="rounded-lg border overflow-hidden" style={{ borderColor: '#ffffff12' }}>
+      <div className="rounded-lg border border-border overflow-hidden">
         <table className="w-full text-sm">
-          <thead style={{ backgroundColor: '#161618' }}>
+          <thead className="bg-card">
             <tr>
               {['Nombre', 'Email', 'WhatsApp', 'Estado', '# Citas', 'Acciones'].map((h) => (
                 <th
                   key={h}
-                  className="px-4 py-3 text-left text-xs text-zinc-500 font-medium"
+                  className="px-4 py-3 text-left text-xs text-muted-foreground font-medium"
                 >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody style={{ backgroundColor: '#0F0F11' }}>
+          <tbody className="bg-background">
             {((patients ?? []) as Patient[]).map((patient) => (
-              <tr key={patient.id} className="border-t" style={{ borderColor: '#ffffff08' }}>
-                <td className="px-4 py-3 text-white font-medium">{patient.full_name}</td>
-                <td className="px-4 py-3 text-zinc-400">{patient.email}</td>
-                <td className="px-4 py-3 text-zinc-400">{patient.whatsapp ?? '—'}</td>
+              <tr key={patient.id} className="border-t border-border/50">
+                <td className="px-4 py-3 text-foreground font-medium">{patient.full_name}</td>
+                <td className="px-4 py-3 text-muted-foreground">{patient.email}</td>
+                <td className="px-4 py-3 text-muted-foreground">{patient.whatsapp ?? '—'}</td>
                 <td className="px-4 py-3">
                   <span
                     className="px-2 py-0.5 rounded-full text-xs font-medium"
@@ -105,7 +105,7 @@ export default async function PacientesPage({
                     {STATUS_LABELS[patient.status] ?? patient.status}
                   </span>
                 </td>
-                <td className="px-4 py-3 text-zinc-400">
+                <td className="px-4 py-3 text-muted-foreground">
                   {appointmentCounts[patient.id] ?? 0}
                 </td>
                 <td className="px-4 py-3">
@@ -115,7 +115,7 @@ export default async function PacientesPage({
             ))}
             {(patients ?? []).length === 0 && (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-center text-zinc-500 text-sm">
+                <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground text-sm">
                   No hay pacientes aún
                 </td>
               </tr>

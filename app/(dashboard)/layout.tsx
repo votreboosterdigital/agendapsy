@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Calendar, Users, Settings } from 'lucide-react'
 import { NavLink } from './components/NavLink'
 import { SidebarSignOut } from './components/SidebarSignOut'
+import { ThemeToggle } from './components/ThemeToggle'
 
 export default async function DashboardLayout({
   children,
@@ -20,13 +21,10 @@ export default async function DashboardLayout({
     .single()
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: '#0F0F11' }}>
-      <aside
-        className="hidden md:flex w-60 flex-col flex-shrink-0 border-r"
-        style={{ backgroundColor: '#161618', borderColor: '#ffffff12' }}
-      >
-        <div className="px-5 py-5 border-b" style={{ borderColor: '#ffffff12' }}>
-          <span className="text-white font-semibold text-base tracking-tight">
+    <div className="flex h-screen overflow-hidden bg-background">
+      <aside className="hidden md:flex w-60 flex-col flex-shrink-0 border-r bg-card border-sidebar-border">
+        <div className="px-5 py-5 border-b border-sidebar-border">
+          <span className="text-foreground font-semibold text-base tracking-tight">
             AgendaPsy
           </span>
         </div>
@@ -35,10 +33,11 @@ export default async function DashboardLayout({
           <NavLink href="/pacientes" icon={<Users size={16} />} label="Pacientes" />
           <NavLink href="/configuracion" icon={<Settings size={16} />} label="Configuración" />
         </nav>
-        <div className="px-3 py-4 border-t" style={{ borderColor: '#ffffff12' }}>
-          <p className="text-xs text-zinc-500 px-2 mb-2 truncate">
+        <div className="px-3 py-4 border-t border-sidebar-border space-y-1">
+          <p className="text-xs text-muted-foreground px-2 mb-2 truncate">
             {profile?.email ?? user.email}
           </p>
+          <ThemeToggle />
           <SidebarSignOut />
         </div>
       </aside>

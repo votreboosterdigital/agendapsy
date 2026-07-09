@@ -48,8 +48,40 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* AgendaPsy — Linear Dark Design System */
+/* AgendaPsy — Design System */
 :root {
+  color-scheme: light;
+  --background: #fafafa;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --popover: #ffffff;
+  --popover-foreground: #0a0a0a;
+  --primary: #635BFF;
+  --primary-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #3f3f46;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #635BFF;
+  --accent-foreground: #ffffff;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #635BFF;
+  --radius: 0.375rem;
+  --sidebar: #f4f4f5;
+  --sidebar-foreground: #0a0a0a;
+  --sidebar-primary: #635BFF;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #635BFF20;
+  --sidebar-accent-foreground: #635BFF;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #635BFF;
+}
+
+.dark {
+  color-scheme: dark;
   --background: #0F0F11;
   --foreground: #ffffff;
   --card: #161618;
@@ -68,7 +100,6 @@
   --border: #ffffff12;
   --input: #ffffff0f;
   --ring: #635BFF;
-  --radius: 0.375rem;
   --sidebar: #161618;
   --sidebar-foreground: #ffffff;
   --sidebar-primary: #635BFF;

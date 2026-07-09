@@ -12,8 +12,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <div>
       <h2
-        className="text-sm font-medium text-zinc-300 mb-3 pb-2 border-b"
-        style={{ borderColor: '#ffffff12' }}
+        className="text-sm font-medium text-muted-foreground mb-3 pb-2 border-b border-border"
       >
         {title}
       </h2>
@@ -47,10 +46,10 @@ export default async function ConfiguracionPage() {
 
   return (
     <div className="p-6 max-w-2xl space-y-8">
-      <h1 className="text-xl font-semibold text-white">Configuración</h1>
+      <h1 className="text-xl font-semibold text-foreground">Configuración</h1>
       <Section title="Perfil">
         <div className="space-y-1 text-sm">
-          <p className="text-white font-medium">{profile?.full_name}</p>
+          <p className="text-foreground font-medium">{profile?.full_name}</p>
           <p className="text-zinc-400">{profile?.email}</p>
           {profile?.specialty && <p className="text-zinc-400">{profile.specialty}</p>}
           {profile?.bio && (

@@ -17,7 +17,7 @@ export function SidebarSignOut() {
   return (
     <button
       onClick={handleSignOut}
-      className="flex w-full items-center gap-2.5 px-2 py-2 rounded-md text-sm text-zinc-500 hover:text-white hover:bg-white/5 transition-colors"
+      className="flex w-full items-center gap-2.5 px-2 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
     >
       <LogOut size={16} />
       Cerrar sesión

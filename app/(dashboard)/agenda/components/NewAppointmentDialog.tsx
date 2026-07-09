@@ -32,7 +32,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>
 
 const inputCls =
-  'w-full px-3 py-2 rounded-md text-sm text-white bg-white/5 border border-[#ffffff12] outline-none focus:ring-1 focus:ring-[#635BFF]'
+  'w-full px-3 py-2 rounded-md text-sm text-foreground bg-muted border border-border outline-none focus:ring-1 focus:ring-[#635BFF]'
 
 function Field({
   label,
@@ -45,7 +45,7 @@ function Field({
 }) {
   return (
     <div>
-      <label className="block text-xs text-zinc-400 mb-1">{label}</label>
+      <label className="block text-xs text-muted-foreground mb-1">{label}</label>
       {children}
       {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
     </div>
@@ -107,11 +107,10 @@ export function NewAppointmentDialog({
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-full max-w-md rounded-xl p-6 shadow-2xl"
-        style={{ backgroundColor: '#161618', border: '1px solid #ffffff12' }}
+        className="w-full max-w-md rounded-xl p-6 shadow-2xl bg-card border border-border"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-base font-semibold text-white mb-5">Nueva cita</h2>
+        <h2 className="text-base font-semibold text-foreground mb-5">Nueva cita</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <Field label="Nombre del paciente" error={errors.patient_name?.message}>
             <input
@@ -137,11 +136,7 @@ export function NewAppointmentDialog({
             />
           </Field>
           <Field label="Servicio" error={errors.service_id?.message}>
-            <select
-              {...register('service_id')}
-              className={inputCls}
-              style={{ backgroundColor: '#1a1a1d' }}
-            >
+            <select {...register('service_id')} className={inputCls}>
               <option value="">Selecciona un servicio</option>
               {services.map((s) => (
                 <option key={s.id} value={s.id}>
@@ -156,15 +151,10 @@ export function NewAppointmentDialog({
                 {...register('date')}
                 type="date"
                 className={inputCls}
-                style={{ colorScheme: 'dark' }}
               />
             </Field>
             <Field label="Hora" error={errors.time?.message}>
-              <select
-                {...register('time')}
-                className={inputCls}
-                style={{ backgroundColor: '#1a1a1d' }}
-              >
+              <select {...register('time')} className={inputCls}>
                 {TIME_OPTIONS.map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
@@ -175,8 +165,7 @@ export function NewAppointmentDialog({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="flex-1 px-4 py-2 rounded-md text-sm text-zinc-400 hover:text-white border transition-colors"
-              style={{ borderColor: '#ffffff12' }}
+              className="flex-1 px-4 py-2 rounded-md text-sm text-muted-foreground hover:text-foreground border border-border transition-colors"
             >
               Cancelar
             </button>
