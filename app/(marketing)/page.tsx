@@ -234,6 +234,8 @@ export default function LandingPage() {
             {...motionProps(4)}
           >
             <MovingBorderButton
+              as="a"
+              href="/signup"
               containerClassName="h-12"
               className="px-7 text-sm font-medium"
             >
@@ -434,6 +436,8 @@ export default function LandingPage() {
                 </ul>
 
                 <MovingBorderButton
+                  as="a"
+                  href="/signup"
                   containerClassName="h-12 w-full"
                   className="w-full justify-center px-7 text-sm font-medium"
                 >

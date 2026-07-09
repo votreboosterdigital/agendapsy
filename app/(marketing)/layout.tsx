@@ -45,6 +45,8 @@ export default function MarketingLayout({
               Iniciar sesión
             </Link>
             <MovingBorderButton
+              as="a"
+              href="/signup"
               containerClassName="h-9"
               className="px-4 py-1.5 text-xs"
             >
