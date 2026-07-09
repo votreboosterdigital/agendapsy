@@ -109,7 +109,7 @@ export default async function PacientesPage({
                   {appointmentCounts[patient.id] ?? 0}
                 </td>
                 <td className="px-4 py-3">
-                  <PatientActions patientId={patient.id} />
+                  <PatientActions patientId={patient.id} status={patient.status} />
                 </td>
               </tr>
             ))}

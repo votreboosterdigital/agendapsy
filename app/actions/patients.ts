@@ -75,3 +75,22 @@ export async function archivePatient(
   revalidatePath('/pacientes')
   return { success: true }
 }
+
+export async function unarchivePatient(
+  id: string
+): Promise<{ success: boolean; error?: string }> {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { success: false, error: 'No autenticado' }
+
+  const { error } = await supabase
+    .from('patients')
+    .update({ status: 'active' })
+    .eq('id', id)
+    .eq('therapist_id', user.id)
+
+  if (error) return { success: false, error: 'Error al desarchivar' }
+
+  revalidatePath('/pacientes')
+  return { success: true }
+}
