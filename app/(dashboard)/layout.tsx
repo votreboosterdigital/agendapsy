@@ -4,6 +4,7 @@ import { Calendar, Users, Settings } from 'lucide-react'
 import { NavLink } from './components/NavLink'
 import { SidebarSignOut } from './components/SidebarSignOut'
 import { ThemeToggle } from './components/ThemeToggle'
+import { MobileNav } from './components/MobileNav'
 
 export default async function DashboardLayout({
   children,
@@ -41,9 +42,10 @@ export default async function DashboardLayout({
           <SidebarSignOut />
         </div>
       </aside>
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-16 md:pb-0">
         {children}
       </main>
+      <MobileNav />
     </div>
   )
 }

@@ -74,7 +74,7 @@ export default async function PacientesPage({
           </a>
         ))}
       </div>
-      <div className="rounded-lg border border-border overflow-hidden">
+      <div className="rounded-lg border border-border overflow-hidden overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-card">
             <tr>
